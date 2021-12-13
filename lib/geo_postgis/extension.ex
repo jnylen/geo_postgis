@@ -41,21 +41,21 @@ defmodule Geo.PostGIS.Extension do
   @behaviour Postgrex.Extension
 
   @geo_types [
-    Geo.GeometryCollection,
-    Geo.LineString,
-    Geo.LineStringZ,
-    Geo.MultiLineString,
-    Geo.MultiLineStringZ,
-    Geo.MultiPoint,
-    Geo.MultiPointZ,
-    Geo.MultiPolygon,
-    Geo.MultiPolygonZ,
-    Geo.Point,
-    Geo.PointZ,
-    Geo.PointM,
-    Geo.PointZM,
-    Geo.Polygon,
-    Geo.PolygonZ
+    Geometry.GeometryCollection,
+    Geometry.LineString,
+    Geometry.LineStringZ,
+    Geometry.MultiLineString,
+    Geometry.MultiLineStringZ,
+    Geometry.MultiPoint,
+    Geometry.MultiPointZ,
+    Geometry.MultiPolygon,
+    Geometry.MultiPolygonZ,
+    Geometry.Point,
+    Geometry.PointZ,
+    Geometry.PointM,
+    Geometry.PointZM,
+    Geometry.Polygon,
+    Geometry.PolygonZ
   ]
 
   def init(opts) do
@@ -73,22 +73,25 @@ defmodule Geo.PostGIS.Extension do
   def encode(_opts) do
     quote location: :keep do
       %x{} = geom when x in unquote(@geo_types) ->
-        data = Geo.WKB.encode_to_iodata(geom)
-        [<<IO.iodata_length(data)::int32>> | data]
+        Geometry.to_wkb(geom)
     end
   end
 
   def decode(:reference) do
     quote location: :keep do
       <<len::int32, wkb::binary-size(len)>> ->
-        Geo.WKB.decode!(wkb)
+        {geom, _srid} = Geometry.from_wkb!(wkb)
+
+        geom
     end
   end
 
   def decode(:copy) do
     quote location: :keep do
       <<len::int32, wkb::binary-size(len)>> ->
-        Geo.WKB.decode!(:binary.copy(wkb))
+        {geom, _srid} = Geometry.from_wkb!(:binary.copy(wkb))
+
+        geom
     end
   end
 end

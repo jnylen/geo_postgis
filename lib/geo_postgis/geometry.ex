@@ -4,57 +4,57 @@ if Code.ensure_loaded?(Ecto.Type) do
     Implements the Ecto.Type behaviour for all geometry types
     """
 
-    alias Geo.{
-      Point,
-      PointZ,
-      PointM,
-      PointZM,
-      LineString,
-      LineStringZ,
-      Polygon,
-      PolygonZ,
-      MultiPoint,
-      MultiPointZ,
-      MultiLineString,
-      MultiLineStringZ,
-      MultiPolygon,
-      MultiPolygonZ,
-      GeometryCollection
+    alias Geometry.{
+       Point,
+       PointZ,
+       PointM,
+       PointZM,
+       LineString,
+       LineStringZ,
+       Polygon,
+       PolygonZ,
+       MultiPoint,
+       MultiPointZ,
+       MultiLineString,
+       MultiLineStringZ,
+       MultiPolygon,
+       MultiPolygonZ,
+       GeometryCollection
     }
 
     @types [
-      "Point",
-      "PointZ",
-      "PointM",
-      "PointZM",
-      "LineString",
-      "LineStringZ",
-      "Polygon",
-      "PolygonZ",
-      "MultiPoint",
-      "MultiPointZ",
-      "MultiLineString",
-      "MultiLineStringZ",
-      "MultiPolygon",
-      "MultiPolygonZ"
+       "Point",
+       "PointZ",
+       "PointM",
+       "PointZM",
+       "LineString",
+       "LineStringZ",
+       "Polygon",
+       "PolygonZ",
+       "MultiPoint",
+       "MultiPointZ",
+       "MultiLineString",
+       "MultiLineStringZ",
+       "MultiPolygon",
+       "MultiPolygonZ"
     ]
 
     @geometries [
-      Point,
-      PointZ,
-      PointM,
-      PointZM,
-      LineString,
-      LineStringZ,
-      Polygon,
-      PolygonZ,
-      MultiPoint,
-      MultiPointZ,
-      MultiLineString,
-      MultiLineStringZ,
-      MultiPolygon,
-      MultiPolygonZ,
-      GeometryCollection
+       Point,
+       PointZ,
+       PointM,
+       PointZM,
+       LineString,
+       LineStringZ,
+       Polygon,
+       PolygonZ,
+       MultiPoint,
+       MultiPointZ,
+       MultiLineString,
+       MultiLineStringZ,
+       MultiPolygon,
+       MultiPolygonZ,
+       GeometryCollection
     ]
 
     if macro_exported?(Ecto.Type, :__using__, 1) do
@@ -67,27 +67,27 @@ if Code.ensure_loaded?(Ecto.Type) do
 
     def blank?(_), do: false
 
-    def load(%struct{} = geom) when struct in @geometries, do: {:ok, geom}
+    def load(%struct{} = geom) when struct in @geometries, do: {:ok, geom |> IO.inspect()}
     def load(_), do: :error
 
-    def dump(%struct{} = geom) when struct in @geometries, do: {:ok, geom}
+    def dump(%struct{} = geom) when struct in @geometries, do: {:ok, geom |> IO.inspect()}
     def dump(_), do: :error
 
     def cast({:ok, value}), do: cast(value)
 
-    def cast(%struct{} = geom) when struct in @geometries, do: {:ok, geom}
+    def cast(%struct{} = geom) when struct in @geometries, do: {:ok, geom |> IO.inspect()}
 
-    def cast(%{"type" => type, "coordinates" => _} = geom) when type in @types do
-      {:ok, Geo.JSON.decode!(geom)}
-    end
+    # def cast(%{"type" => type, "coordinates" => _} = geom) when type in @types do
+    #   {:ok, Geo.JSON.decode!(geom)}
+    # end
 
-    def cast(%{"type" => "GeometryCollection", "geometries" => _} = geom) do
-      {:ok, Geo.JSON.decode!(geom)}
-    end
+    # def cast(%{"type" => "GeometryCollection", "geometries" => _} = geom) do
+    #   {:ok, Geo.JSON.decode!(geom)}
+    # end
 
-    def cast(geom) when is_binary(geom) do
-      {:ok, geom |> Geo.PostGIS.Config.json_library().decode!() |> Geo.JSON.decode!()}
-    end
+    # def cast(geom) when is_binary(geom) do
+    #   {:ok, geom |> Geo.PostGIS.Config.json_library().decode!() |> Geo.JSON.decode!()}
+    # end
 
     def cast(_), do: :error
 
