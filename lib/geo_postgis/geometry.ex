@@ -67,15 +67,15 @@ if Code.ensure_loaded?(Ecto.Type) do
 
     def blank?(_), do: false
 
-    def load(%struct{} = geom) when struct in @geometries, do: {:ok, geom |> IO.inspect()}
+    def load(%struct{} = geom) when struct in @geometries, do: {:ok, geom}
     def load(_), do: :error
 
-    def dump(%struct{} = geom) when struct in @geometries, do: {:ok, geom |> IO.inspect()}
+    def dump(%struct{} = geom) when struct in @geometries, do: {:ok, geom}
     def dump(_), do: :error
 
     def cast({:ok, value}), do: cast(value)
 
-    def cast(%struct{} = geom) when struct in @geometries, do: {:ok, geom |> IO.inspect()}
+    def cast(%struct{} = geom) when struct in @geometries, do: {:ok, geom}
 
     # def cast(%{"type" => type, "coordinates" => _} = geom) when type in @types do
     #   {:ok, Geo.JSON.decode!(geom)}
