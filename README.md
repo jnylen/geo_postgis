@@ -9,6 +9,8 @@
 
 Postgrex extension for the PostGIS data types. Uses the [geo](https://github.com/bryanjos/geo) library
 
+**NOTE: We did a fork in order to use geometry instead of geo as we had several issues in a project regarding that library.**
+
 ## Installation
 
 The package can be installed by adding `:geo_postgis` to your list of
@@ -170,12 +172,11 @@ end
 
 After you got the dependencies via `mix deps.get` make sure that:
 
-* `postgis` is installed
-* your `postgres` user has the database `"geo_postgrex_test"`
-* your `postgres` db user can login without a password or you set the `PGPASSWORD` environment variable appropriately
+- `postgis` is installed
+- your `postgres` user has the database `"geo_postgrex_test"`
+- your `postgres` db user can login without a password or you set the `PGPASSWORD` environment variable appropriately
 
 Then you can run the tests as you are used to with `mix test`.
-
 
 ## Copyright and License
 
