@@ -219,6 +219,10 @@ defmodule Geo.PostGIS do
     quote do: fragment("ST_Envelope(?)", unquote(geometry))
   end
 
+  defmacro st_make_envelope(coords, srid) do
+    quote do: fragment("ST_MakeEnvelope(?, ?)", unquote(cords), unquote(srid))
+  end
+
   defmacro st_is_simple(geometry) do
     quote do: fragment("ST_IsSimple(?)", unquote(geometry))
   end
